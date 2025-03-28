@@ -25,7 +25,10 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      Lecture1
+      Lecture2
+      Lecture3
+      Lecture4
   other-modules:
       Paths_exercises
   autogen-modules:
@@ -55,6 +58,13 @@ test-suite exercises-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      DoctestLecture1
+      DoctestLecture2
+      DoctestLecture3
+      Test.Lecture1
+      Test.Lecture2
+      Test.Lecture3
+      Test.Lecture4
       Paths_exercises
   autogen-modules:
       Paths_exercises
