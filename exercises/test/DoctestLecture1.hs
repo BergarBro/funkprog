@@ -1,4 +1,4 @@
-module Main (main) where
+module DoctestLecture1 (main) where
 
 import Test.DocTest (doctest)
 
