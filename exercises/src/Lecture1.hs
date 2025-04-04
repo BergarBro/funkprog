@@ -30,7 +30,7 @@ module Lecture1
     , strSum
     , lowerAndGreater
     ) where
-import Text.ParserCombinators.Parsec.Char (lower)
+-- import Text.ParserCombinators.Parsec.Char (lower)
 
 -- VVV If you need to import libraries, do it after this line ... VVV
 
