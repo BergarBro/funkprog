@@ -6,6 +6,8 @@ import Data.Maybe
 
 -- If you're not sure what this is, it's ok.
 import Control.Monad (mapM)
+-- import Distribution.Compat.Prelude (undefined)
+-- import Distribution.Compat.Prelude (undefined)
 
 -- A pattern is a list of things
 -- Where we have either a value or a wildcard
@@ -21,7 +23,7 @@ type Template a = Pattern a
 
 -- A phrase is a list of string
 type Phrase = [String]
-
+-- type String = [Char]
 newtype Rule = Rule (Pattern String, [Template String])
   deriving (Eq, Show)
 
@@ -109,7 +111,7 @@ ruleCompile = undefined
 -- mkPattern '*' "Hi *!" => [Item 'H', Item 'i', Wildcard, Item '!']
 mkPattern :: Eq a => a -> [a] -> Pattern a
 {- TO BE WRITTEN -}
-mkPattern = undefined
+mkPattern wild list = Pattern $ map (\x -> if x == wild then Wildcard else Item x) list
 
 stringToPattern :: String -> String -> Pattern String
 stringToPattern wc = mkPattern wc . words
@@ -145,15 +147,45 @@ reductionsApply = undefined
 --------------------------------------------------------
 
 -- Replaces a wildcard in a template with the list given as the third argument
+-- ex: substitute (Pattern [Item 1,Item 2,Wildcard,Item 4]) [5] => [1,2,5,4]
+-- ex: substitute (Pattern [Item 1,Item 2,Wildcard,Item 4]) [5,6,7] => [1,2,5,6,7,4]
+-- ex: substitute (Pattern [Item 1,Item 2,Wildcard,Item 4,Wildcard]) [-1,-2,-3] => [1,2,-1,-2,-3,4,-1,-2,-3]
 substitute :: Eq a => Template a -> [a] -> [a]
 {- TO BE WRITTEN -}
-substitute = undefined
+-- substitute = undefined
+substitute (Pattern []) _ = []
+substitute (Pattern (Wildcard:xs)) wild = wild ++ (substitute (Pattern xs) wild)
+substitute (Pattern ((Item x):xs)) wild = x : (substitute (Pattern xs) wild)
 
 -- Tries to match two lists. If they match, the result consists of the sublist
 -- bound to the wildcard in the pattern list.
+-- ex: match (mkPattern '*' "frodo") "gandalf" = Nothing
+-- ex: match (mkPattern 'x' "2*x+3+x") "2*7+3" = Nothing
+-- ex: match (mkPattern 'x' "abcd") "abcd" = Just []
+-- ex: match (mkPattern 2 [1,3..5]) [1,3..5] = Just []
+-- ex: match (mkPattern 'x' "2*x+3") "2*7+3" = Just "7"
+-- ex: match (mkPattern '*' "* and *") "you and me" = Just "you"
+-- ex: match (Pattern [Item 1,Item 2,Wildcard,Item 4]) [1,2,5,4] => Just [5]
+-- ex: match (Pattern [Item 1,Item 2,Wildcard,Item 4]) [1,2,5,6,7,4] => Just [5,6,7]
 match :: Eq a => Pattern a -> [a] -> Maybe [a]
 {- TO BE WRITTEN -}
-match = undefined
+-- match = undefined
+match (Pattern []) _ = Nothing
+match _ [] = Nothing
+match (Pattern [Item p]) [x] =
+    if x == p
+        then Just []
+        else Nothing
+match (Pattern ((Item p):ps)) (x:xs) =
+    if x == p
+        then match (Pattern ps) xs
+        else Nothing
+-- match (Pattern (Wildcard:ps)) (x:xs) =
+
+-- hej :: [Int] -> Int
+-- hej [] = 0
+-- hej [x] = x
+-- hej (x:xs) = x + 1
 
 -- Helper function to match
 singleWildcardMatch, longerWildcardMatch :: Eq a => Pattern a -> [a] -> Maybe [a]
@@ -162,7 +194,7 @@ singleWildcardMatch (Pattern (Wildcard:ps)) (x:xs) =
     Nothing -> Nothing
     Just _ -> Just [x]
 {- TO BE WRITTEN -}
-longerWildcardMatch = undefined
+longerWildcardMatch (Pattern (Wildcard:ps)) (x:xs) = undefined
 
 
 
