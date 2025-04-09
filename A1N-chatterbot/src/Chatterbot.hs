@@ -170,17 +170,17 @@ substitute (Pattern ((Item x):xs)) wild = x : (substitute (Pattern xs) wild)
 match :: Eq a => Pattern a -> [a] -> Maybe [a]
 {- TO BE WRITTEN -}
 -- match = undefined
-match (Pattern []) _ = Nothing
-match _ [] = Nothing
-match (Pattern [Item p]) [x] =
-    if x == p
-        then Just []
-        else Nothing
+match (Pattern [])  [] = Just []
+match (Pattern [])  _  = Nothing
+match _             [] = Nothing
 match (Pattern ((Item p):ps)) (x:xs) =
     if x == p
         then match (Pattern ps) xs
         else Nothing
--- match (Pattern (Wildcard:ps)) (x:xs) =
+-- match Pattern (Wildcard:((Item p):ps)) (x:(y:xs)) =
+--     if 
+match p l = singleWildcardMatch p l
+
 
 -- hej :: [Int] -> Int
 -- hej [] = 0
@@ -190,11 +190,13 @@ match (Pattern ((Item p):ps)) (x:xs) =
 -- Helper function to match
 singleWildcardMatch, longerWildcardMatch :: Eq a => Pattern a -> [a] -> Maybe [a]
 singleWildcardMatch (Pattern (Wildcard:ps)) (x:xs) =
-  case match (Pattern ps) xs of
-    Nothing -> Nothing
-    Just _ -> Just [x]
+    case match (Pattern ps) xs of
+        Nothing -> Nothing
+        Just _ -> Just [x]
 {- TO BE WRITTEN -}
-longerWildcardMatch (Pattern (Wildcard:ps)) (x:xs) = undefined
+-- longerWildcardMatch (Pattern (Wildcard:(p:ps))) (x:(y:xs)) = 
+--     case match (Pattern (Wildcard:(p)))
+    
 
 
 
